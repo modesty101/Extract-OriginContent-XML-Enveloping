@@ -19,14 +19,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * XML-Enveloping-Signature 예제 변형
- * 
- * @source <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/xmldsig/GenEnveloping.java"/>
- * @author <a href="mailto:modesty101@daum.net">김동규</a>
- * @since 2017
- */
-
-/**
  * This is a simple example of generating an Enveloping XML
  * Signature using the JSR 105 API. The signature in this case references a
  * local URI that points to an Object element.
@@ -73,6 +65,14 @@ import org.w3c.dom.Node;
  * </code></pre>
  */
 
+/**
+ * XML-Enveloping-Signature 예제 변형
+ * 그리고, 원본 값 추출하기
+ * 
+ * @source <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/xmldsig/GenEnveloping.java"/>
+ * @author <a href="mailto:modesty101@daum.net">김동규</a>
+ * @since 2017
+ */
 public class GenEnveloping {
 
     //
