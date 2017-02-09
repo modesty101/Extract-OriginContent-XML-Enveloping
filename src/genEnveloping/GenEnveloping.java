@@ -7,7 +7,11 @@ import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.keyinfo.*;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.security.*;
 import java.util.Collections;
@@ -66,8 +70,9 @@ import org.w3c.dom.Node;
  */
 
 /**
- * XML-Enveloping-Signature 예제 변형
- * 그리고, 원본 값 추출하기
+ * XML-Enveloping-Signature 예제 변형 그리고, 원본 값 추출하기
+ * 
+ * + 추가사항 - 2017.02.09 : GUI 구현, (암호화 알고리즘)DSA에서 RSA로 변경
  * 
  * @source <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/xmldsig/GenEnveloping.java"/>
  * @author <a href="mailto:modesty101@daum.net">김동규</a>
@@ -75,74 +80,78 @@ import org.w3c.dom.Node;
  */
 public class GenEnveloping {
 
-    //
-    // Synopis: java GenEnveloping [output]
-    //
-    //   where "output" is the name of a file that will contain the
-    //   generated signature. If not specified, standard ouput will be used.
-    //
-	
-    public static void main(String[] args) throws Exception {
+	//
+	// Synopis: java GenEnveloping [output]
+	//
+	// where "output" is the name of a file that will contain the
+	// generated signature. If not specified, standard ouput will be used.
+	//
+	public static byte[] loadFile(String encodeFile) throws IOException {
+		File file = new File(encodeFile);
+		int len = (int) file.length();
 
-        // First, create the DOM XMLSignatureFactory that will be used to
-        // generate the XMLSignature
-        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+		BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file));
+		byte[] bytes = new byte[len];
+		reader.read(bytes, 0, len);
+		reader.close();
 
-        // Next, create a Reference to a same-document URI that is an Object
-        // element and specify the SHA1 digest algorithm
-        Reference ref = fac.newReference("#object",
-            fac.newDigestMethod(DigestMethod.SHA1, null));
+		return bytes;
+	}
 
-        // Next, create the referenced Object
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-        Document doc = dbf.newDocumentBuilder().newDocument();
-        Node text = doc.createTextNode("HI");
-        XMLStructure content = new DOMStructure(text);
-        XMLObject obj = fac.newXMLObject
-            (Collections.singletonList(content), "object", null, null);
+	public static void main(String args) throws Exception {
+		byte[] bytes = loadFile(args);
+		String str = new String(bytes, "UTF-8");
 
-        // Create the SignedInfo
-        SignedInfo si = fac.newSignedInfo(
-            fac.newCanonicalizationMethod
-                (CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS,
-                 (C14NMethodParameterSpec) null),
-            fac.newSignatureMethod(SignatureMethod.DSA_SHA1, null),
-            Collections.singletonList(ref));
+		// First, create the DOM XMLSignatureFactory that will be used to
+		// generate the XMLSignature
+		XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
 
-        // Create a DSA KeyPair
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
-        kpg.initialize(512);
-        KeyPair kp = kpg.generateKeyPair();
+		// Next, create a Reference to a same-document URI that is an Object
+		// element and specify the SHA1 digest algorithm
+		Reference ref = fac.newReference("#object", fac.newDigestMethod(DigestMethod.SHA1, null));
 
-        // Create a KeyValue containing the DSA PublicKey that was generated
-        KeyInfoFactory kif = fac.getKeyInfoFactory();
-        KeyValue kv = kif.newKeyValue(kp.getPublic());
+		// Next, create the referenced Object
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		Document doc = dbf.newDocumentBuilder().newDocument();
+		Node text = doc.createTextNode(str);
+		XMLStructure content = new DOMStructure(text);
+		XMLObject obj = fac.newXMLObject(Collections.singletonList(content), "object", null, null);
 
-        // Create a KeyInfo and add the KeyValue to it
-        KeyInfo ki = kif.newKeyInfo(Collections.singletonList(kv));
+		// Create the SignedInfo
+		SignedInfo si = fac.newSignedInfo(
+				fac.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS,
+						(C14NMethodParameterSpec) null),
+				fac.newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
 
-        // Create the XMLSignature (but don't sign it yet)
-        XMLSignature signature = fac.newXMLSignature(si, ki,
-            Collections.singletonList(obj), null, null);
+		// Create a DSA KeyPair
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+		kpg.initialize(1024);
+		KeyPair kp = kpg.generateKeyPair();
 
-        // Create a DOMSignContext and specify the DSA PrivateKey for signing
-        // and the document location of the XMLSignature
-        DOMSignContext dsc = new DOMSignContext(kp.getPrivate(), doc);
+		// Create a KeyValue containing the DSA PublicKey that was generated
+		KeyInfoFactory kif = fac.getKeyInfoFactory();
+		KeyValue kv = kif.newKeyValue(kp.getPublic());
 
-        // Lastly, generate the enveloping signature using the PrivateKey
-        signature.sign(dsc);
+		// Create a KeyInfo and add the KeyValue to it
+		KeyInfo ki = kif.newKeyInfo(Collections.singletonList(kv));
 
-        // output the resulting document
-        OutputStream os;
-        if (args.length > 0) {
-           os = new FileOutputStream(args[0]);
-        } else {
-           os = System.out;
-        }
+		// Create the XMLSignature (but don't sign it yet)
+		XMLSignature signature = fac.newXMLSignature(si, ki, Collections.singletonList(obj), null, null);
 
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer trans = tf.newTransformer();
-        trans.transform(new DOMSource(doc), new StreamResult(os));
-    }
+		// Create a DOMSignContext and specify the DSA PrivateKey for signing
+		// and the document location of the XMLSignature
+		DOMSignContext dsc = new DOMSignContext(kp.getPrivate(), doc);
+
+		// Lastly, generate the enveloping signature using the PrivateKey
+		signature.sign(dsc);
+
+		// output the resulting document
+		OutputStream os;
+		os = new FileOutputStream(args+".xml");
+
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer trans = tf.newTransformer();
+		trans.transform(new DOMSource(doc), new StreamResult(os));
+	}
 }

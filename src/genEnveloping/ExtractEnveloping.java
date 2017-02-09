@@ -22,9 +22,9 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:modesty101@daum.net">±èµ¿±Ô</a>
  * @since 2017
  */
-public class ExtractEnveloped {
-	public static void main(String[] args) throws Exception {
-		File xmlFile = new File("GenEnveloping.xml");
+public class ExtractEnveloping {
+	public static void main(String args) throws Exception {
+		File xmlFile = new File(args);
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -40,7 +40,7 @@ public class ExtractEnveloped {
 				if (eElement.hasChildNodes()) {
 					NodeList nl = node.getChildNodes();
 					nd = nl.item(0);
-					System.out.println(nd);
+					System.out.println(nd.getTextContent());
 					// for (int j = 0; j < nl.getLength(); j++) {
 					// nd = nl.item(0);
 					// String name = nd.getTextContent();
