@@ -16,8 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * XML-Enveloping-Signature 
- *  - 원본 값(origin data) 추출
+ * XML-Enveloping-Signature - 원본 값(origin data) 추출
  * 
  * @author <a href="mailto:modesty101@daum.net">김동규</a>
  * @since 2017
@@ -52,7 +51,7 @@ public class ExtractEnveloping {
 		}
 
 		// Save to file
-		OutputStream os = new FileOutputStream("out.xml");
+		OutputStream os = new FileOutputStream("Extracted.xml");
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer trans = tf.newTransformer();
 		trans.transform(new DOMSource(node), new StreamResult(os));

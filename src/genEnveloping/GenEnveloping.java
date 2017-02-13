@@ -74,7 +74,8 @@ import org.w3c.dom.Node;
  * 
  * + 추가사항 - 2017.02.09 : GUI 구현, (암호화 알고리즘)DSA에서 RSA로 변경
  * 
- * @source <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/xmldsig/GenEnveloping.java"/>
+ * @source <a href=
+ *         "https://docs.oracle.com/javase/8/docs/technotes/guides/security/xmldsig/GenEnveloping.java"/>
  * @author <a href="mailto:modesty101@daum.net">김동규</a>
  * @since 2017
  */
@@ -86,11 +87,11 @@ public class GenEnveloping {
 	// where "output" is the name of a file that will contain the
 	// generated signature. If not specified, standard ouput will be used.
 	//
-	public static byte[] loadFile(String encodeFile) throws IOException {
-		File file = new File(encodeFile);
+	public static byte[] loadFile(String lFile) throws IOException {
+		File file = new File(lFile);
 		int len = (int) file.length();
 
-		BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file));
+		BufferedInputStream reader = new BufferedInputStream(new FileInputStream(lFile));
 		byte[] bytes = new byte[len];
 		reader.read(bytes, 0, len);
 		reader.close();
