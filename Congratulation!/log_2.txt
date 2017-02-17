@@ -1,0 +1,10 @@
+추출된 값 : <water>I need a water</water>
+
+Where is <?xml ... > : 37
+where is End Sign > : 150
+Where is <Object ..> : 44
+Done
+
+[#text: yNnjiO/bsvEPr/OaLlf7VVpzXTA=]
+
+yNnjiO/bsvEPr/OaLlf7VVpzXTA= 는 yNnjiO/bsvEPr/OaLlf7VVpzXTA= 와 같다 :true

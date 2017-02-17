@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.security.*;
 import java.util.Collections;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -81,12 +82,13 @@ import org.w3c.dom.Node;
  */
 public class GenEnveloping {
 
-	//
-	// Synopis: java GenEnveloping [output]
-	//
-	// where "output" is the name of a file that will contain the
-	// generated signature. If not specified, standard ouput will be used.
-	//
+	/**
+	 * 파일을 불러온다.
+	 * 
+	 * @param lFile
+	 * @return bytes;
+	 * @throws IOException
+	 */
 	public static byte[] loadFile(String lFile) throws IOException {
 		File file = new File(lFile);
 		int len = (int) file.length();
@@ -99,57 +101,71 @@ public class GenEnveloping {
 		return bytes;
 	}
 
+	/**
+	 * Enveloping 시그니처를 생성한다. 
+	 * + XML 파일, 텍스트 파일 전용..
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String args) throws Exception {
-		byte[] bytes = loadFile(args);
-		String str = new String(bytes, "UTF-8");
+		/* 로그 파일 생성 */
+		File file = new File("log.txt");
+		PrintStream printStream = new PrintStream(new FileOutputStream(file));
+		System.setOut(printStream);
 
-		// First, create the DOM XMLSignatureFactory that will be used to
-		// generate the XMLSignature
+		/* 파일을 불러온다 */
+		byte[] bytes = loadFile(args);
+		String str = new String(bytes);
+
+		// XMLSignatureFactory 객체에 DOM 인스턴스를 받아온다.
 		XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
 
 		// Next, create a Reference to a same-document URI that is an Object
 		// element and specify the SHA1 digest algorithm
+		// 레퍼런스 생성, 동일한 문서의 URI(오브젝트) 그리고 SHA1 알고리즘 설정하라는 소리.
 		Reference ref = fac.newReference("#object", fac.newDigestMethod(DigestMethod.SHA1, null));
 
-		// Next, create the referenced Object
+		// 노드 내용 추가, <Object>1234 형식으로 만들어진다.
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setNamespaceAware(true);
 		Document doc = dbf.newDocumentBuilder().newDocument();
 		Node text = doc.createTextNode(str);
 		XMLStructure content = new DOMStructure(text);
+		// <object>1234</object>
 		XMLObject obj = fac.newXMLObject(Collections.singletonList(content), "object", null, null);
 
-		// Create the SignedInfo
+		// SignedInfo 생성
 		SignedInfo si = fac.newSignedInfo(
 				fac.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS,
 						(C14NMethodParameterSpec) null),
 				fac.newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
 
-		// Create a DSA KeyPair
+		// RSA 키 생성
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 		kpg.initialize(1024);
 		KeyPair kp = kpg.generateKeyPair();
 
-		// Create a KeyValue containing the DSA PublicKey that was generated
+		// 키 값에 RSA 공개키를 포함한다.
 		KeyInfoFactory kif = fac.getKeyInfoFactory();
 		KeyValue kv = kif.newKeyValue(kp.getPublic());
 
-		// Create a KeyInfo and add the KeyValue to it
+		// 키 정보를 생성하고 키 값을 추가한다.
 		KeyInfo ki = kif.newKeyInfo(Collections.singletonList(kv));
 
-		// Create the XMLSignature (but don't sign it yet)
+		// XML 시그니처 생성한다. (아직 서명 전임)
 		XMLSignature signature = fac.newXMLSignature(si, ki, Collections.singletonList(obj), null, null);
 
-		// Create a DOMSignContext and specify the DSA PrivateKey for signing
-		// and the document location of the XMLSignature
+		/*
+		 * DOMSignContext 생성하고, RSA 개인키로 문서를 서명한다.
+		 */
 		DOMSignContext dsc = new DOMSignContext(kp.getPrivate(), doc);
 
-		// Lastly, generate the enveloping signature using the PrivateKey
+		// 마지막으로 enveloping 시그니처를 생성한다. 개인키를 씀으로
 		signature.sign(dsc);
 
-		// output the resulting document
+		// 결과
 		OutputStream os;
-		os = new FileOutputStream(args+".xml");
+		os = new FileOutputStream(args + ".xml");
 
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer trans = tf.newTransformer();

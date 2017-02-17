@@ -8,6 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class AppendStr {
+	
+	/**
+	 * 파일을 불러온다.
+	 * 
+	 * @param lFile
+	 * @return bytes;
+	 * @throws IOException
+	 */
 	public static byte[] loadFile(String lFile) throws IOException {
 		File file = new File(lFile);
 		int len = (int) file.length();
@@ -20,6 +28,13 @@ public class AppendStr {
 		return bytes;
 	}
 
+	/**
+	 * 파일의 내용을 조작한다. + 추가, 삭제
+	 * 
+	 * @param args
+	 * @return true;
+	 * @throws Exception
+	 */
 	public static boolean main(String args) throws Exception {
 		byte bytes[] = loadFile(args); // Extracted.xml
 		String str = new String(bytes);
@@ -36,7 +51,7 @@ public class AppendStr {
 		lastindex = sb.lastIndexOf(">");
 		System.out.println("Where is <Object ..> : " + sb.indexOf("t"));
 
-		bw = new BufferedWriter(new FileWriter("Extracted.xml"));
+		bw = new BufferedWriter(new FileWriter(args));
 		/* 컴퓨터는 0부터 시작한다. 정상적인 값을 얻으려면 마지막에 +1을 해야된다. */
 		bw.write(sb.substring(index + 1, lastindex + 1));
 		bw.close();

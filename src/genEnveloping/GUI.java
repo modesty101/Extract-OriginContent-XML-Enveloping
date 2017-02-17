@@ -12,6 +12,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * GUI 구현
+ * 
+ * @author 김동규
+ * @since 2017
+ */
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements ActionListener {
 
@@ -28,9 +34,9 @@ public class GUI extends JFrame implements ActionListener {
 
 	public GUI() {
 		openButton = new JButton("OPEN"); // 버튼 객체 생성
-		extractButton = new JButton("EXTRACT");
-		verifyButton = new JButton("VERIFY");
-		prepareVfyButton = new JButton("PREPARE");
+		extractButton = new JButton("EXTRACT"); // 값 추출
+		verifyButton = new JButton("VERIFY"); // 다이제스트 값 검증
+		prepareVfyButton = new JButton("PREPARE"); // 검증 준비
 		exitButton = new JButton("EXIT");
 		buttonPanel = new JPanel(); // 판넬 객체 생성
 
@@ -64,8 +70,8 @@ public class GUI extends JFrame implements ActionListener {
 		chooser.setMultiSelectionEnabled(true);
 
 		if (e.getSource() == openButton) {
+			/* 파일을 Enveloping 서명한다. */
 			int result = chooser.showOpenDialog(this);
-
 			if (result == JFileChooser.APPROVE_OPTION) {
 				try {
 					GenEnveloping.main(chooser.getSelectedFile().toString());
@@ -76,12 +82,12 @@ public class GUI extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "Signed Successfully");
 			}
 		} else if (e.getSource() == extractButton) {
+			/* 서명된 파일에서 원본 파일을 추출한다 */
 			int result = chooser.showOpenDialog(this);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				try {
 					ExtractEnveloping.main(chooser.getSelectedFile().toString());
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				JOptionPane.showMessageDialog(null, "Extract Successfully");
@@ -90,12 +96,12 @@ public class GUI extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(null, "종료합니다.");
 			System.exit(0);
 		} else if (e.getSource() == verifyButton) {
+			/* 다이제스트 값을 검증한다 */
 			int result = chooser.showOpenDialog(this);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				boolean flag = false;
-				File selected[] = chooser.getSelectedFiles();
 				try {
-					flag = VerifyEnveloping.main(selected[0].getName(),selected[1].getName());
+					flag = VerifyEnveloping.main(chooser.getSelectedFile().getName());
 					if (flag == true) {
 						JOptionPane.showMessageDialog(null, "Verify OK");
 					} else {
@@ -108,6 +114,7 @@ public class GUI extends JFrame implements ActionListener {
 
 			}
 		} else if (e.getSource() == prepareVfyButton) {
+			/* 검증을 위해 특정 문자열을 특정위치에 삽입한다 */
 			int result = chooser.showOpenDialog(this);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				boolean flag = false;

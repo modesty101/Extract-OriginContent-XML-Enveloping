@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#object"><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>yNnjiO/bsvEPr/OaLlf7VVpzXTA=</DigestValue></Reference></SignedInfo><SignatureValue>IWXs3br7QN9hA71x6jEuYMqw55eJo3eUczQPsi2I/g1Bgy6Jt6qSnwjcikppVcHpGL/IzFUqbYO0
+psdHYlWp46re+ac80fRGK5lthhvV9KDEkhUcm06TFsAi3iVNGELt3F9SOHOrnxlrBnRwocm4yu76
+Im0p5GR4iKCae2Qgctw=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>sR8MhgnTKkpZ14msyulzW9GmfslWjlADJn/g08WYZ/SR1trG2LJgZIkuodstkQcG4dve0wub3hLR
+Mq1fsaEfTbynp7E9kDTm+2e1249Jg7XxoZ1foXoukoJdo9AEbVZlYw6okTlsQMoXQBgJgTuURmoL
+qBTT0PYVZtUDh4U9eBk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue></KeyInfo><Object Id="object">&lt;water&gt;I need a water&lt;/water&gt;</Object></Signature>

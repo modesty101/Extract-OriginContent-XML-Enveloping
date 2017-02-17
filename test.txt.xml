@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#object"><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>ezbjywRSK6I2ciIW+qJRNkQGdNI=</DigestValue></Reference></SignedInfo><SignatureValue>bHgJ+9VWEGgyFcTvovdIsBtKBoUxJXWx+4FiISzGyXJP/HuBC+XSifykFRG9d43Cenk60VFMUnTq
-TV5QVZ3DvCYGLorsVcFFnEcvvQWVCFPuMJa2Xu0vKZAdADcZZGEjeDtIJSK2AWmEfjvCDFbu40Fz
-leTEDwEJYSJre7IL6L4=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>o4U/HhFb582iD5oBtdT7Xfvkkb3DREEu6qiRqtkqGQbfW/P4SoIGBYq8ifI/skMGGRLo1st5inub
-gUEFRnQrkfR0tFNifzz9ssueUPlNIWWUM9JGTZ0XDK351/p0OwtlgFLsRQmrI9o/O9gn8YQCfFJN
-Vgyqq2Ve6LZILUAc8g0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue></KeyInfo><Object Id="object">1234</Object></Signature>

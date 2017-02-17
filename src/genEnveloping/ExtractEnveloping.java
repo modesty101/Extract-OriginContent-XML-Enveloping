@@ -22,6 +22,13 @@ import org.w3c.dom.NodeList;
  * @since 2017
  */
 public class ExtractEnveloping {
+
+	/**
+	 * XML 파일에서 다이제스트 값을 추출한다.
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String args) throws Exception {
 		File xmlFile = new File(args);
 
@@ -39,19 +46,13 @@ public class ExtractEnveloping {
 				if (eElement.hasChildNodes()) {
 					NodeList nl = node.getChildNodes();
 					nd = nl.item(0);
-					System.out.println(nd.getTextContent());
-					// for (int j = 0; j < nl.getLength(); j++) {
-					// nd = nl.item(0);
-					// String name = nd.getTextContent();
-					// System.out.println(name);
-					// }
+					System.out.println("추출된 값 : " + nd.getTextContent());
 				}
 				System.out.println("");
 			}
 		}
 
-		// Save to file
-		OutputStream os = new FileOutputStream("Extracted.xml");
+		OutputStream os = new FileOutputStream(args + ".test");
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer trans = tf.newTransformer();
 		trans.transform(new DOMSource(node), new StreamResult(os));

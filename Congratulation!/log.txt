@@ -1,0 +1,10 @@
+1234
+
+Where is <?xml ... > : 37
+where is End Sign > : 113
+Where is <Object ..> : 44
+Done
+
+[#text: ezbjywRSK6I2ciIW+qJRNkQGdNI=]
+
+ezbjywRSK6I2ciIW+qJRNkQGdNI= 는 ezbjywRSK6I2ciIW+qJRNkQGdNI= 와 같다 :true
